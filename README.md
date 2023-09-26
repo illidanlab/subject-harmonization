@@ -1,5 +1,5 @@
 ## Subject Harmonization of Digital Biomarkers: Improved Detection of Mild Cognitive Impairment from Language Markers
-Official code for paper: "Subject Harmonization of Digital Biomarkers: Improved Detection of Mild Cognitive Impairment from Language Markers"
+Official code for paper: "Subject Harmonization of Digital Biomarkers: Improved Detection of Mild Cognitive Impairment from Language Markers", Bao Hoang, Yijiang Pang, Hiroko H. Dodge, and Jiayu Zhou, PSB 2024.
 
 ## Overview 
 Mild cognitive impairment (MCI) represents the early stage of dementia including
