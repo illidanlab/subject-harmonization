@@ -47,7 +47,7 @@ class whiting_confounderS_solver(Solver_Base):
         dataloader_train = DataLoader(CustomDataset_coufounder(x_train, y_train, [g_train_sbj, g_train_age, g_train_gender, g_train_educ]), 
                                       batch_size = self.cfg_m.training.batch_size, drop_last=True, shuffle = True, pin_memory=True, worker_init_fn = np.random.seed(seed))
         
-        model = MLP_whiting_confounders(input_dim = len(x_train[0]), confounders_dim = [len(list(set(g_train_age))), len(list(set(g_train_gender))), len(list(set(g_train_educ)))], task_in_dim = len(x_train[0]), task_out_dim = self.cfg_m.data.dim_out) 
+        model = MLP_whiting_confounders(input_dim = len(x_train[0]), confounders_dim = [len(list(set(g_train_age))), len(list(set(g_train_gender))), len(list(set(g_train_educ)))], task_in_dim = len(x_train[0]), task_out_dim = self.cfg_m.data.dim_out,classifier = self.cfg_proj.classifier) 
         model = model.to(self.device)
         
         #whiting features

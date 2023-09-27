@@ -16,7 +16,7 @@ class Standard_solver(Solver_Base):
         
         # Initialize
         dataloader_train = DataLoader(CustomDataset(x_train, y_train, g_train), batch_size = self.cfg_m.training.batch_size, drop_last=True, shuffle = True)
-        model = MLP_pytorch(input_dim = len(x_train[0]), output_dim = self.cfg_m.data.dim_out)
+        model = MLP_pytorch(input_dim = len(x_train[0]), output_dim = self.cfg_m.data.dim_out, classifier = self.cfg_proj.classifier) 
         optimizer = torch.optim.AdamW(model.parameters(), lr = self.cfg_m.training.lr_init)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, int(self.cfg_m.training.epochs*len(dataloader_train)))   #very useful
         criterion = self.cross_entropy_regs

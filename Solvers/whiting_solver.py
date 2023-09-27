@@ -16,7 +16,7 @@ class whiting_solver(Solver_Base):
         dataloader_train = DataLoader(CustomDataset(x_train, y_train, g_train), 
                                       batch_size = self.cfg_m.training.batch_size, drop_last=True, shuffle = True, pin_memory=True, worker_init_fn = np.random.seed(seed))
         
-        model = MLP_whiting(input_dim = len(x_train[0]), sbj_dim = len(list(set(g_train))), task_in_dim = len(x_train[0]), task_out_dim = self.cfg_m.data.dim_out) 
+        model = MLP_whiting(input_dim = len(x_train[0]), sbj_dim = len(list(set(g_train))), task_in_dim = len(x_train[0]), task_out_dim = self.cfg_m.data.dim_out, classifier = self.cfg_proj.classifier) 
         model = model.to(self.device)
         
         #whiting features

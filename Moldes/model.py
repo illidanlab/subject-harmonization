@@ -4,19 +4,24 @@ import numpy as np
 
 # Define model
 class MLP_pytorch(torch.nn.Module):
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, input_dim, output_dim, classifier = "MLP"):
         super(MLP_pytorch, self).__init__()
-        # LR 
-        # self.linear1 = torch.nn.Linear(input_dim, output_dim)
 
-        # MLP
-        self.linear1 = torch.nn.Linear(input_dim, 32)
-        self.relu1 = torch.nn.ReLU()
-        self.linear2 = torch.nn.Linear(32, output_dim)
+        self.classifier = classifier
+
+        if self.classifier == "LR":
+            # LR 
+            self.linear1 = torch.nn.Linear(input_dim, output_dim)
+        else:
+            # MLP
+            self.linear1 = torch.nn.Linear(input_dim, 32)
+            self.relu1 = torch.nn.ReLU()
+            self.linear2 = torch.nn.Linear(32, output_dim)
     
     def forward(self, x):
-        # LR
-        # return self.linear1(x)
+        if self.classifier == "LR":
+            # LR
+            return self.linear1(x)
 
         # MLP
         outputs = self.linear1(x)
@@ -41,7 +46,7 @@ class MSE_pytorch(torch.nn.Module):
 
 class MLP_whiting(torch.nn.Module):
     feature_idx = None
-    def __init__(self, input_dim, sbj_dim, task_in_dim, task_out_dim):
+    def __init__(self, input_dim, sbj_dim, task_in_dim, task_out_dim, classifier = "MLP"):
         super(MLP_whiting, self).__init__()
         self.feature_mapping = torch.nn.Sequential(
             torch.nn.Linear(input_dim, 64),
@@ -51,19 +56,22 @@ class MLP_whiting(torch.nn.Module):
             torch.nn.Linear(64, input_dim),
         )
         self.out_sbj = torch.nn.Linear(input_dim, sbj_dim)
-        self.out_task = torch.nn.Sequential(
-            # LR
-            # torch.nn.Linear(task_in_dim, task_out_dim),
-            
-            # MLP
-            torch.nn.Linear(task_in_dim, 32),
-            torch.nn.ReLU(),
-            torch.nn.Linear(32, task_out_dim)
-        )
+        self.classifier = classifier
+        if self.classifier == "LR":
+            self.out_task = torch.nn.Sequential(
+                # LR
+                torch.nn.Linear(task_in_dim, task_out_dim),
+            )
+        else:
+            self.out_task = torch.nn.Sequential(
+                # MLP
+                torch.nn.Linear(task_in_dim, 32),
+                torch.nn.ReLU(),
+                torch.nn.Linear(32, task_out_dim)
+            )
     
     def forward(self, x, id):
         feature = self.feature_mapping(x)
-        # self.feature_idx = [i for i in range(self.feature_dim)] if self.feature_idx is None else self.feature_idx
         if id == "0":
             return feature
         elif id == "1":
@@ -79,7 +87,7 @@ class MLP_whiting(torch.nn.Module):
 
 class MLP_whiting_confounders(torch.nn.Module):
     feature_idx = None
-    def __init__(self, input_dim, confounders_dim, task_in_dim, task_out_dim):
+    def __init__(self, input_dim, confounders_dim, task_in_dim, task_out_dim, classifier = "MLP"):
         super(MLP_whiting_confounders, self).__init__()
         self.feature_mapping = torch.nn.Sequential(
             torch.nn.Linear(input_dim, 64),
@@ -92,19 +100,22 @@ class MLP_whiting_confounders(torch.nn.Module):
         self.out_age = torch.nn.Linear(input_dim, confounders_dim[0])
         self.out_gender = torch.nn.Linear(input_dim, confounders_dim[1])
         self.out_educ = torch.nn.Linear(input_dim, confounders_dim[2])
-        self.out_task = torch.nn.Sequential(
-            # LR
-            # torch.nn.Linear(task_in_dim, task_out_dim),
-            
-            # MLP
-            torch.nn.Linear(task_in_dim, 32),
-            torch.nn.ReLU(),
-            torch.nn.Linear(32, task_out_dim)
-        )
+        self.classifier = classifier
+        if self.classifier == "LR":
+            self.out_task = torch.nn.Sequential(
+                # LR
+                torch.nn.Linear(task_in_dim, task_out_dim),
+            )
+        else:
+            self.out_task = torch.nn.Sequential(
+                # MLP
+                torch.nn.Linear(task_in_dim, 32),
+                torch.nn.ReLU(),
+                torch.nn.Linear(32, task_out_dim)
+            )
     
     def forward(self, x, id):
         feature = self.feature_mapping(x)
-        # self.feature_idx = [i for i in range(self.feature_dim)] if self.feature_idx is None else self.feature_idx
         if id == "0":
             return feature
         elif id == "1":
@@ -181,7 +192,6 @@ class CustomDataset_coufounder(Dataset):
         self.G_age = self.G_age[idx_kept]
         self.G_gender = self.G_gender[idx_kept]
         self.G_educ = self.G_educ[idx_kept]
-        # print("%d points are kept from %d points in total" % (self.__len__(), num_ori))
         return self
 
 class CustomDatasetGroup(Dataset):
@@ -199,5 +209,4 @@ class CustomDatasetGroup(Dataset):
     def kept(self, idx_kept):
         self.X = self.X[idx_kept]
         self.Y = self.Y[idx_kept]
-        # print("%d points are kept from %d points in total" % (self.__len__(), num_ori))
         return self

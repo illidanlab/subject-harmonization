@@ -37,7 +37,7 @@ def main(cfg_proj, cfg_m):
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="template")
-    parser.add_argument("--gpu", type=str, default="0", required=False)
+    parser.add_argument("--gpu", type=str, default="3", required=False)
     parser.add_argument("--seed", type=int, default = None, required=False) 
     parser.add_argument("--num_total_runs", type=int, default = 100, required=False) 
     parser.add_argument("--flag_generatePredictions", default = ["Sex", "Edu", "Age"])
@@ -45,7 +45,8 @@ if __name__ == "__main__":
     parser.add_argument("--vote_threshold", type=int, default = 0.5, required=False) 
 
     #Standard_solver, Baseline_confounder_solver, whiting_solver, whiting_confounder_solver, whiting_confounderS_solver
-    parser.add_argument("--solver", type=str, default="Baseline_confounder_solver", required=False)  
+    parser.add_argument("--solver", type=str, default="whiting_solver", required=False)  
+    parser.add_argument("--classifier", type=str, default="MLP", required=False)  #LR, MLP
     parser.add_argument("--flag_log", type=str, default = True, required=False) 
     parser.add_argument("--save_whitening", type=bool, default = False, required=False) 
     parser.add_argument("--flag_time", type=str, default = strftime("%Y-%m-%d_%H-%M-%S", localtime()), required=False)
