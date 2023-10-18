@@ -6,7 +6,7 @@ def init_cfg(cfg_proj):
     config = get_default_configs()
     config.Note = None
 
-    if n_solver in ["Standard_solver", "DRO_solver", "JTT_solver", "whiting_confounder_solver" ,"GroupDRO_solver", "analysis_solver", "whiting_confounderS_solver", "whiting_solver", "Feature_importance_solver2", "Feature_importance_solver", "Baseline_confounder_solver", "sklearn_solver"]:
+    if n_solver in ["Standard_solver", "whiting_confounder_solver" , "whiting_confounderS_solver", "whiting_solver", "Baseline_confounder_solver"]:
         config.data.dim_out = 2
         config.training.epochs = 100
         config.training.batch_size = 512
