@@ -1,4 +1,3 @@
-from tkinter import E
 import numpy as np
 from Solvers.Solver_Base import Solver_Base
 import torch
@@ -25,16 +24,14 @@ class whiting_solver(Solver_Base):
         lr_scheduler_sbj = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer_sbj, int(self.cfg_m.training.epochs_whiting*len(dataloader_train)))   #very useful
         model, loss_train_trace = self.sbj_train(model, dataloader_train, None, optimizer_sbj, lr_scheduler_sbj)
         
-        #feature_preprocessing - outlier detection and feature selection
-        dataloader_train_ = DataLoader(CustomDataset(x_train, y_train, g_train), 
-                                       batch_size = self.cfg_m.training.batch_size, drop_last=False, shuffle = False, pin_memory=True, worker_init_fn = np.random.seed(seed))
-        
-        #feature_preprocessing - outlier detection and feature selection
-        dataloader_test_ = DataLoader(CustomDataset(x_test, y_test, g_test), 
-                                       batch_size = self.cfg_m.training.batch_size, drop_last=False, shuffle = False, pin_memory=True, worker_init_fn = np.random.seed(seed))
-
-        self.feature_preprocessing(model, dataloader_train_, dataloader_test_)
-        
+        # save harmonized feature
+        if self.cfg_proj.save_whitening:
+            dataloader_train_ = DataLoader(CustomDataset(x_train, y_train, g_train), 
+                                        batch_size = self.cfg_m.training.batch_size, drop_last=False, shuffle = False, pin_memory=True, worker_init_fn = np.random.seed(seed))
+            dataloader_test_ = DataLoader(CustomDataset(x_test, y_test, g_test), 
+                                        batch_size = self.cfg_m.training.batch_size, drop_last=False, shuffle = False, pin_memory=True, worker_init_fn = np.random.seed(seed))
+            self.feature_preprocessing(model, dataloader_train_, dataloader_test_)
+            
         #Task training
         self.freeze_grad(model, except_str = ["out_task"])
         criterion = self.cross_entropy_regs
@@ -98,14 +95,12 @@ class whiting_solver(Solver_Base):
 
     def feature_preprocessing(self, model, dataloader_train, dataloader_test):
         model.eval()
-        features_np = np.zeros(dataloader_train.dataset.X.shape)
         id2feature = {}
 
         with torch.no_grad():
             for train_X, train_Y, train_G, idx in dataloader_train:   
                 train_X, train_Y, train_G = train_X.float().to(self.device), train_Y.to(self.device), train_G.to(self.device)
                 features = model(train_X, id = "0") #
-                features_np[idx] = features.data.detach().cpu().numpy()
                 features = features.data.detach().cpu().numpy().tolist()
                 train_G = train_G.data.detach().cpu().numpy().tolist()
                 for i in range(len(features)):
@@ -113,22 +108,18 @@ class whiting_solver(Solver_Base):
                         id2feature[dataloader_train.dataset.subject_id[train_G[i]]] = []
                     id2feature[dataloader_train.dataset.subject_id[train_G[i]]].append(features[i]) 
 
-        if self.cfg_proj.save_whitening:
-            with torch.no_grad():
-                for test_X, test_Y, test_G, idx in dataloader_test:   
-                    test_X, test_Y, test_G = test_X.float().to(self.device), test_Y.to(self.device), test_G.to(self.device)
-                    features = model(test_X, id = "0") #
-                    features = features.data.detach().cpu().tolist()
-                    test_G = test_G.data.detach().cpu().tolist()
-                    for i in range(len(features)):
-                        if dataloader_test.dataset.subject_id[test_G[i]] not in id2feature:
-                            id2feature[dataloader_test.dataset.subject_id[test_G[i]]] = []
-                        id2feature[dataloader_test.dataset.subject_id[test_G[i]]].append(features[i]) 
+            for test_X, test_Y, test_G, idx in dataloader_test:   
+                test_X, test_Y, test_G = test_X.float().to(self.device), test_Y.to(self.device), test_G.to(self.device)
+                features = model(test_X, id = "0") #
+                features = features.data.detach().cpu().tolist()
+                test_G = test_G.data.detach().cpu().tolist()
+                for i in range(len(features)):
+                    if dataloader_test.dataset.subject_id[test_G[i]] not in id2feature:
+                        id2feature[dataloader_test.dataset.subject_id[test_G[i]]] = []
+                    id2feature[dataloader_test.dataset.subject_id[test_G[i]]].append(features[i]) 
 
-            with open("rawdata/id2feature_whitening.p", "wb") as output_file:
-                pickle.dump(id2feature, output_file) 
-
-        dataset_train_updated = dataloader_train.dataset
+        with open("rawdata/id2feature_whitening.p", "wb") as output_file:
+            pickle.dump(id2feature, output_file) 
   
 
     #for the id
@@ -176,5 +167,3 @@ class whiting_solver(Solver_Base):
             pred = torch.nn.functional.softmax(pred, dim = 1)
         
         return pred.detach().cpu().numpy() 
-
-
