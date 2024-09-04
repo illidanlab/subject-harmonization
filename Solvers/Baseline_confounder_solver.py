@@ -2,8 +2,7 @@ import numpy as np
 from Solvers.Solver_Base import Solver_Base
 import torch
 from torch.utils.data import DataLoader
-from Moldes.model import MSE_pytorch, CustomDataset, LR_pytorch
-import torch.nn.functional as F
+from Models.model import MSE_pytorch, CustomDataset, LR_pytorch
 
 class Baseline_confounder_solver(Solver_Base):
     
@@ -12,11 +11,12 @@ class Baseline_confounder_solver(Solver_Base):
         
     def run(self, x_train, y_train, g_train, x_test, y_test, g_test, seed):
         # Set seed
-        # self.set_random_seed(seed)
+        self.set_random_seed(seed)
         
         # train for confounder classifier
         epochs = 50
         X_confounder, X_test_confounder = x_train[:, -3:], x_test[:, -3:]
+        
         for i in range(x_train.shape[-1] - 3):
             Y = x_train[:, i]
             dataloader_train_c = DataLoader(CustomDataset(X_confounder, Y, g_train), batch_size = self.cfg_m.training.batch_size, drop_last=True, shuffle = True)
@@ -52,7 +52,6 @@ class Baseline_confounder_solver(Solver_Base):
         
         return auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj
     
-
     def basic_train_confounder(self, model, dataloader_train, criterion, optimizer, lr_scheduler, epochs):
         loss_train_trace = []
         for epoch in range(epochs):
@@ -71,5 +70,3 @@ class Baseline_confounder_solver(Solver_Base):
                 lr_scheduler.step()
                 loss_train_trace.append(np.mean(loss_epoch))
         return model, loss_train_trace
-
-

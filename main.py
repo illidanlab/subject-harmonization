@@ -25,7 +25,7 @@ def main(cfg_proj, cfg_m):
         
         # Data preprocessing
         x_train, y_train, g_train, x_test, y_test, g_test = data_pre_processing(cfg_proj, cfg_m, x_train, y_train, g_train, x_test, y_test, g_test)
-        
+
         # Run the experiment
         auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj = solver.run(x_train, y_train, g_train, x_test, y_test, g_test, seed)
 
@@ -44,8 +44,8 @@ if __name__ == "__main__":
     parser.add_argument("--number_of_feature", type=int, default = 99, required=False)  
     parser.add_argument("--vote_threshold", type=int, default = 0.5, required=False) 
 
-    #Standard_solver, Baseline_confounder_solver, whiting_solver, whiting_confounder_solver, whiting_confounderS_solver
-    parser.add_argument("--solver", type=str, default="whiting_solver", required=False)  
+    #Standard_solver, Baseline_confounder_solver, subject_harmonization_solver, confounder_harmonization_solver
+    parser.add_argument("--solver", type=str, default="subject_harmonization_solver", required=False)  
     parser.add_argument("--classifier", type=str, default="MLP", required=False)  #LR, MLP
     parser.add_argument("--flag_log", type=str, default = True, required=False) 
     parser.add_argument("--save_whitening", type=bool, default = False, required=False) 

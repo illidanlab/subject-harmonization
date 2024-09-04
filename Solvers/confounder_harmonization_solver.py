@@ -1,14 +1,11 @@
-from tkinter import E
 import numpy as np
 from Solvers.Solver_Base import Solver_Base
 import torch
 from torch.utils.data import DataLoader
-from Moldes.model import MLP_pytorch, MLP_whiting, CustomDataset
+from Models.model import MLP_whiting, CustomDataset
 import torch.nn.functional as F
 import pickle
 from sklearn import metrics
-import math
-
 
 def generalization(values, values_f, num_class):
     v_mean = np.mean(values)
@@ -29,7 +26,7 @@ def generalization(values, values_f, num_class):
     return values_g, values_f_g
 
 
-class whiting_confounder_solver(Solver_Base):
+class confounder_harmonization_solver(Solver_Base):
     
     def __init__(self, cfg_proj, cfg_m, name = "white_c"):
         Solver_Base.__init__(self, cfg_proj, cfg_m, name)
@@ -264,5 +261,3 @@ class whiting_confounder_solver(Solver_Base):
         
         self.save_results_each_run(auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj)
         return auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj
-
-

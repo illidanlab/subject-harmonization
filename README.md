@@ -2,6 +2,9 @@
 Official code for paper: "Subject Harmonization of Digital Biomarkers: Improved Detection of Mild Cognitive Impairment from Language Markers", Bao Hoang, Yijiang Pang, Hiroko H. Dodge, and Jiayu Zhou, PSB 2024.
 
 ## Overview 
+
+![](pipeline.png) 
+
 Mild cognitive impairment (MCI) represents the early stage of dementia including Alzheimer’s disease (AD) and plays a crucial role in developing therapeutic interventions and treatment. Early detection of MCI offers opportunities for early intervention and significantly benefits cohort enrichment for clinical trials. Imaging markers and in vivo markers
 in plasma and cerebrospinal fluid biomarkers have high detection performance, and yet their prohibitive costs and intrusiveness demand more affordable and accessible alternatives. The recent advances in digital biomarkers, especially language markers, have shown great potential, where variables informative to MCI are derived from linguistic and/or speech and later
 used for predictive modeling. A major challenge in modeling language markers comes from the variability of how each person speaks. As the cohort size for language studies is usually
@@ -25,11 +28,11 @@ Here we provide several demos of using harminzation commands. Remember to use yo
  
 - **Deep harmonization - subject (Proposed method):**
   
-    - Run ```python main.py --solver whiting_solver```
+    - Run ```python main.py --solver subject_harmonization_solver```
 
 - **Deep harmonization - confounder:**
   
-    - Run ```python main.py --solver whiting_confounder_solver```
+    - Run ```python main.py --solver confounder_harmonization_solver```
 
     - You can change confounder variable using variable ``config.training.confounder_var`` in ``configs/cfg.py``
 

@@ -2,11 +2,11 @@ import numpy as np
 from Solvers.Solver_Base import Solver_Base
 import torch
 from torch.utils.data import DataLoader
-from Moldes.model import MLP_pytorch, MLP_whiting, CustomDataset
+from Models.model import MLP_whiting, CustomDataset
 import torch.nn.functional as F
 import pickle
 
-class whiting_solver(Solver_Base):
+class subject_harmonization_solver(Solver_Base):
     
     def __init__(self, cfg_proj, cfg_m, name = "white"):
         Solver_Base.__init__(self, cfg_proj, cfg_m, name)

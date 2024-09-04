@@ -7,7 +7,7 @@ def data_pre_processing(cfg_proj, cfg_m, x_train_raw, y_train, g_train, x_test_r
         x_train_raw = x_train_raw[:, :-3]
         x_test_raw = x_test_raw[:, :-3]
     
-    if cfg_proj.solver not in ["whiting_confounder_solver", "whiting_confounderS_solver"]:
+    if cfg_proj.solver not in ["confounder_harmonization_solver"]:
         g_train, g_test = [g[0] for g in g_train], [g[0] for g in g_test]
 
     scaler = StandardScaler()

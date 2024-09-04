@@ -1,22 +1,13 @@
-from tqdm import tqdm
 import random
 import torch
 import numpy as np
 import logging
 import torch.nn.functional as F
-from sklearn.metrics import (
-    precision_recall_fscore_support as prf,
-    accuracy_score,
-    roc_auc_score,
-)
 import os
 import torch.nn as nn
 import time
 import ml_collections
 from sklearn import metrics
-import pandas as pd
-import math
-
 
 class Solver_Base:
     
@@ -186,8 +177,7 @@ class Solver_Base:
             if torch.cuda.device_count() > 1: torch.cuda.manual_seed_all(seed)
         np.random.seed(seed)
         random.seed(seed)
-        # torch.backends.cudnn.deterministic = True
-        # torch.backends.cudnn.benchmark = False
+
         self.seed_current = seed
 
 

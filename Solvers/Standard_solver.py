@@ -1,9 +1,7 @@
-import numpy as np
 from Solvers.Solver_Base import Solver_Base
 import torch
 from torch.utils.data import DataLoader
-from Moldes.model import MLP_pytorch, CustomDataset
-import torch.nn.functional as F
+from Models.model import MLP_pytorch, CustomDataset
 
 class Standard_solver(Solver_Base):
     
@@ -12,7 +10,7 @@ class Standard_solver(Solver_Base):
         
     def run(self, x_train, y_train, g_train, x_test, y_test, g_test, seed):
         # Set seed
-        # self.set_random_seed(seed)
+        self.set_random_seed(seed)
         
         # Initialize
         dataloader_train = DataLoader(CustomDataset(x_train, y_train, g_train), batch_size = self.cfg_m.training.batch_size, drop_last=True, shuffle = True)
@@ -29,5 +27,3 @@ class Standard_solver(Solver_Base):
         auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj = self.eval_func(model, x_test, y_test, g_test)
         
         return auc, f1, sens, spec, auc_sbj, f1_sbj, sens_sbj, spec_sbj
-
-
