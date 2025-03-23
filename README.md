@@ -11,12 +11,12 @@ used for predictive modeling. A major challenge in modeling language markers com
 small due to extensive data collection efforts, the variability among persons makes language markers hard to generalize to unseen subjects. In this paper, we propose a novel subject harmonization tool to address the issue of distributional differences in language markers across subjects, thus enhancing the generalization performance of machine learning models. Our empirical results show that machine learning models built on our harmonized features have improved prediction performance on unseen data.
 
 ## Language Marker Extractor
-To extract language marker from the transcripts, you need to extract syntactic complexity feature using [L2 Syntactic Complexity Analyzer](https://sites.psu.edu/xxl13/l2sca/). After that, put your syntactic complexity feature in file `rawdata/syntactic_complexity_measures.csv` and your transcripts data in folder `Transcriptions`, then run command ```python feature_extractor.py```
+To extract language markers from the transcripts, you need to extract syntactic complexity feature using [L2 Syntactic Complexity Analyzer](https://sites.psu.edu/xxl13/l2sca/). After that, put your syntactic complexity feature in file `rawdata/syntactic_complexity_measures.csv` and your transcripts data in folder `Transcriptions`, then run command ```python feature_extractor.py```
 
 It will give you 99-dimensional language marker feature in `rawdata/id2feature.p`
 
 ## Harmonization Methods
-Here we provide several demos of using harminzation commands. Remember to use your own transcripts data, the existing data in repo is just for demo.
+Here we provide several demos of using harmonization commands. Remember to use your own transcripts data, the existing data in repo is just for demo.
 
 - **None Harmonization:**
 
